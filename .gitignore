@@ -1,0 +1,14 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Local secrets and environment
+.env
+.env.*
+!.env.example
+
+# Keep the image folder in Git but avoid committing huge image libraries if desired
+# Uncomment the next line if product images should stay local:
+# item pictures/*
+# !item pictures/.gitkeep
