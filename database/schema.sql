@@ -1,15 +1,15 @@
-CREATE DATABASE electro_catalog
-  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE electro_catalog;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
-CREATE TABLE `categories` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(80) NOT NULL
+CREATE DATABASE IF NOT EXISTS `electro_catalog` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `electro_catalog`;
+
+CREATE TABLE IF NOT EXISTS `categories` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(80) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `categories`
---
 
 INSERT INTO `categories` (`id`, `name`) VALUES
 (4, 'Accessories'),
@@ -18,26 +18,19 @@ INSERT INTO `categories` (`id`, `name`) VALUES
 (3, 'Mobile'),
 (5, 'Photography');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `products`
---
-
-CREATE TABLE `products` (
-  `id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `products` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `category_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(160) NOT NULL,
   `description` text NOT NULL,
   `price` decimal(10,2) UNSIGNED NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `stock` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_products_name` (`name`),
+  KEY `idx_products_category` (`category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `products`
---
 
 INSERT INTO `products` (`id`, `category_id`, `name`, `description`, `price`, `image`, `stock`, `created_at`) VALUES
 (1, 1, 'Studio Wireless Headphones', 'Comfort-first wireless headphones with a balanced sound profile, soft ear cushions, and a clean everyday design.', 5499.00, 'wireless-headphones.jpg', 18, '2026-10-14 05:14:07'),
@@ -61,52 +54,18 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `description`, `price`, `im
 (19, 5, 'Professional Tripod Stand', 'A lightweight yet sturdy carbon-fiber tripod with a fluid head for smooth pan shots and stable photography.', 4999.00, 'tripod.jpg', 11, '2026-10-14 05:14:07'),
 (20, 5, 'LED Ring Light 18-inch', 'An adjustable brightness ring light with a phone holder, ideal for content creation, makeup tutorials, and video calls.', 3299.00, 'ring-light.jpg', 16, '2026-10-14 05:14:07');
 
---
--- Indexes for dumped tables
---
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(254) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_users_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Indexes for table `categories`
---
-ALTER TABLE `categories`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
 
---
--- Indexes for table `products`
---
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_products_name` (`name`),
-  ADD KEY `idx_products_category` (`category_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `categories`
---
-ALTER TABLE `categories`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `products`
---
-ALTER TABLE `products`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `products`
---
 ALTER TABLE `products`
   ADD CONSTRAINT `fk_products_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON UPDATE CASCADE;
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

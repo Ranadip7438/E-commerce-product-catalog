@@ -1,33 +1,45 @@
 <?php
 declare(strict_types=1);
 
-// Convert special characters to safe HTML
-function e($value)
+function e(?string $value): string
 {
-    return htmlspecialchars((string)($value ?? ''), ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-// Display price in Indian Rupees
-function money($amount)
+function money(float|string $amount): string
 {
-    return '₹' . number_format((float)$amount, 2);
+    return '₹' . number_format((float) $amount, 2);
 }
 
-// Get the product image path
-function image_url($filename)
+function image_url(?string $filename): string
 {
-    if (empty($filename)) {
-        return 'https://placehold.co/400x300?text=No+Image';
+    $filename = trim((string) $filename);
+    if ($filename === '') {
+        return 'https://placehold.co/800x600/f3f5f7/697386?text=Product+Image';
     }
 
-    $filename = basename($filename);
-    $path = __DIR__ . '/../item pictures/' . $filename;
-
-    // Check whether the image exists
-    if (file_exists($path)) {
-        return 'item%20pictures/' . rawurlencode($filename);
+    $safeName = basename($filename);
+    $path = __DIR__ . '/../item pictures/' . $safeName;
+    if (!is_file($path)) {
+        return 'https://placehold.co/800x600/f3f5f7/697386?text=Image+Not+Found';
     }
 
-    // Show a default image if the file is missing
-    return 'https://placehold.co/400x300?text=Image+Not+Found';
+    return 'item%20pictures/' . rawurlencode($safeName);
+}
+
+function csrf_token(): string
+{
+    if (empty($_SESSION['csrf_token']) || !is_string($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function csrf_is_valid(): bool
+{
+    $posted = $_POST['csrf_token'] ?? '';
+    return is_string($posted)
+        && isset($_SESSION['csrf_token'])
+        && is_string($_SESSION['csrf_token'])
+        && hash_equals($_SESSION['csrf_token'], $posted);
 }
