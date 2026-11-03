@@ -48,6 +48,7 @@ $pageTitle = $pageTitle ?? 'Electro - Everyday technology';
         <?php } ?>
 
         <a class="button button-light" href="index.php#catalog">Catalog</a>
+        <a class="button button-light" href="cart.php">Cart</a>
 
     </nav>
 

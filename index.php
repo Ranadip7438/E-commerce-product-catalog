@@ -142,6 +142,27 @@ require 'includes/header.php';
                         )) ?>
                     </p>
 
+                    <div class="product-spacer"></div>
+                    
+                    <form action="cart_action.php" method="post">
+                        <input
+                            type="hidden"
+                            name="product_id"
+                            value="<?= (int) $product['id'] ?>"
+                        >
+
+                        <input type="hidden" name="quantity" value="1">
+                        <input type="hidden" name="action" value="add">
+
+                        <button
+                            type="submit"
+                            class="button button-dark"
+                            <?= (int) $product['stock'] < 1 ? 'disabled' : '' ?>
+                        >
+                            <?= (int) $product['stock'] < 1 ? 'Out of Stock' : 'Add to Cart' ?>
+                        </button>
+                    </form>
+
                     <div class="product-bottom">
                         <strong><?= money($product['price']) ?></strong>
 
