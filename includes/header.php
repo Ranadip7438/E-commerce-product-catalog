@@ -46,6 +46,10 @@ $pageTitle = $pageTitle ?? 'Electro - Everyday technology';
             </a>
 
         <?php } ?>
+        
+        <?php if (isset($_SESSION['user_id'])): ?>
+             <a href="purchase_history.php">Purchase History</a>
+        <?php endif; ?>
 
         <a class="button button-light" href="index.php#catalog">Catalog</a>
         <a class="button button-light" href="cart.php">Cart</a>

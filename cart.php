@@ -83,6 +83,13 @@ require 'includes/header.php';
         </a>
     </div>
 
+    <?php if (!empty($_SESSION['checkout_error'])): ?>
+    <p class="checkout-error">
+        <?= e($_SESSION['checkout_error']) ?>
+    </p>
+    <?php unset($_SESSION['checkout_error']); ?>
+    <?php endif; ?>
+
     <?php if (empty($cartItems)): ?>
 
         <div class="cart-empty">
@@ -198,7 +205,14 @@ require 'includes/header.php';
                     <span>Subtotal</span>
                     <strong><?= money($subtotal) ?></strong>
                 </div>
-
+                <form action="checkout.php" method="post">
+                    <button
+                        type="submit"
+                        class="button button-dark cart-buy-button"
+                    >
+                        Buy Now
+                    </button>
+                </form>
                 <p class="cart-summary-note">
                     Shipping and taxes are not included.
                 </p>
